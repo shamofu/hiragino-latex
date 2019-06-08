@@ -1,0 +1,41 @@
+language: node_js
+node_js: lts/*
+os: osx
+osx_image: xcode10.2
+env:
+  global:
+    - HOMEBREW_NO_INSTALL_CLEANUP=TRUE
+before_install:
+  - brew update
+install:
+  - brew install ghostscript lcdf-typetools
+  - brew cask install basictex
+  - export PATH="/Library/TeX/texbin:$PATH"
+  - sudo tlmgr update --self --all
+  - sudo tlmgr install scheme-full
+  - curl -fsSL https://www.preining.info/rsa.asc | sudo tlmgr key add -
+  - sudo tlmgr repository add http://contrib.texlive.info/current tlcontrib
+  - sudo tlmgr pinning add tlcontrib '*'
+  - sudo tlmgr install japanese-otf-nonfree japanese-otf-uptex-nonfree ptex-fontmaps-macos cjk-gs-integrate-macos
+  - yarn install
+before_script:
+  - sudo cjk-gs-integrate --link-texmf --cleanup --force
+  - sudo cjk-gs-integrate-macos --link-texmf --force
+  - sudo mktexlsr
+  - sudo kanji-config-updmap-sys --jis2004 hiragino-highsierra-pron
+  - sudo kanji-config-updmap-sys status
+script:
+  - yarn lint
+  - latexmk -pdfdvi -norc -e "\$dvipdf='dvipdfmx %O -o %D %S'; \$makeindex='upmendex %O -o %D %S'; \$biber='biber %O --bblencoding=utf8 -u -U --output_safechars %B'; \$bibtex='upbibtex %O %B'; \$latex='uplatex %O -kanji=utf8 -interaction=batchmode -halt-on-error -file-line-error %S';"
+    document.tex
+  - pdffonts document.pdf
+deploy:
+  skip_cleanup: true
+  provider: releases
+  api_key:
+    secure: MGv4OeeZIwK2ZB+W6I9hvxlkDnvXD2LArS+1IYdbdhb59xrQ6iCTp8ZjA92cr7rjTaCPupGBa4tQAJHhs6Fql4OJxCVS9/+FV1mOGlPgD+hFhS1VWERBmYZ0s+YxndH4yf3wUGP3PT/Hoo7+EfRh/C/pZUUlhicxodxxmirJXZkwi/jma8PB35Rn5Lhk1VNsi55Urs7ph7Jka3ia8a76ZZ0W0PbXtPzdoDdZuxPda4iSqwCiNw/Yf/FTVHYjHtTMxRkaS+aotXbJkFCge+QKh8ZvqX3bLV5uQl5KS7mff0i2J645NZlymnvia5sjeNe0Ccn/WBUDx137NeWSqaFkDKSASEvdSTmW//fVca2igj/tghzWHRid2IXoUWQyHh48uB6lEgEg3oXOPjlTJK9yfbh88/ZghxkRJEuronzzaMxDX39RAu4OiktEXPaXt1IPHprquCMQKtHWI2FNX4MnUxqulHC8Rs4lZrWEUw13rBqsKXdtrfI2KITSGxn8V01B51LoYhmik/yhrz0Ifn8Q2aTCINuFVs2G6NMgP3O87EYLwO0u6v99+Sj0ZI0v9f2VNCucpuDRvV4D7P0PY++bb7nLos0EtGYxnJSG5GbvlqLHxXeCKcY0Di+1P2FpHrXJs8ioKMpiNhiQZKW3mYG2krxbSqy0XayUXpRtw/wwSyI=
+  file:
+    - document.pdf
+  on:
+    branch: master
+    tags: true

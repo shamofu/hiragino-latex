@@ -1,0 +1,26 @@
+{
+  "plugins": ["latex2e"],
+  "rules": {
+    "prh": {
+      "rulePaths" :["./rules/prh.yml"]
+    },
+    "ja-hiragana-fukushi": true,
+    "ja-hiragana-hojodoushi": true,
+    "no-mixed-zenkaku-and-hankaku-alphabet": true,
+    "preset-ja-engineering-paper" :true,
+    "preset-ja-spacing": true,
+    "preset-ja-technical-writing": {
+      "ja-no-mixed-period": {
+        "periodMark": "．"
+      }
+    }
+  },
+  "filters": {
+    "whitelist": {
+      "whitelistConfigPaths": [
+        "./rules/whitelists/words.yml",
+        "./rules/whitelists/latex.yml"
+      ]
+    }
+  }
+}
