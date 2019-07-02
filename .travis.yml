@@ -19,6 +19,7 @@ install:
   - sudo tlmgr install japanese-otf-nonfree japanese-otf-uptex-nonfree ptex-fontmaps-macos cjk-gs-integrate-macos
   - yarn install
 before_script:
+  - sudo fc-cache -fv
   - sudo cjk-gs-integrate --link-texmf --cleanup --force
   - sudo cjk-gs-integrate-macos --link-texmf --force
   - sudo mktexlsr
@@ -26,7 +27,7 @@ before_script:
   - sudo kanji-config-updmap-sys status
 script:
   - yarn lint
-  - latexmk -pdfdvi -norc -e "\$dvipdf='dvipdfmx %O -o %D %S'; \$makeindex='upmendex %O -o %D %S'; \$biber='biber %O --bblencoding=utf8 -u -U --output_safechars %B'; \$bibtex='upbibtex %O %B'; \$latex='uplatex %O -kanji=utf8 -interaction=batchmode -halt-on-error -file-line-error %S';"
+  - latexmk -silent -pdfdvi -norc -e "\$dvipdf='dvipdfmx %O -o %D %S'; \$makeindex='upmendex %O -o %D %S'; \$biber='biber %O --bblencoding=utf8 -u -U --output_safechars %B'; \$bibtex='upbibtex %O %B'; \$latex='uplatex %O -kanji=utf8 -interaction=batchmode -halt-on-error -file-line-error %S';"
     document.tex
   - pdffonts document.pdf
 deploy:
