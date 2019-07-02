@@ -8,7 +8,7 @@ env:
 before_install:
   - brew update
 install:
-  - brew install ghostscript lcdf-typetools
+  - brew install ghostscript
   - brew cask install basictex
   - export PATH="/Library/TeX/texbin:$PATH"
   - sudo tlmgr update --self --all
