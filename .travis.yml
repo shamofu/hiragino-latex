@@ -8,6 +8,8 @@ env:
 before_cache:
   - find $HOME/texlive -name "*.log" -type f -delete
   - find $HOME/.texlive -name "*.log" -type f -delete
+  - find $HOME/texlive -name "ls-R" -type f -delete
+  - find $HOME/.texlive -name "ls-R" -type f -delete
 cache:
   directories:
     - $HOME/texlive
