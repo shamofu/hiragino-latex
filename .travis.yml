@@ -5,26 +5,27 @@ osx_image: xcode11.3
 env:
   global:
     - HOMEBREW_NO_INSTALL_CLEANUP=TRUE
+before_cache:
+  - find $HOME/texlive -name "*.log" -type f -delete
+  - find $HOME/.texlive -name "*.log" -type f -delete
+cache:
+  directories:
+    - $HOME/texlive
+    - $HOME/.texlive
 before_install:
   - brew update
 install:
   - brew install ghostscript
-  - brew cask install basictex
-  - export PATH="/Library/TeX/texbin:$PATH"
-  - sudo tlmgr update --self --all
-  - sudo tlmgr install scheme-full
-  - curl -fsSL https://www.preining.info/rsa.asc | sudo tlmgr key add -
-  - sudo tlmgr repository add http://contrib.texlive.info/current tlcontrib
-  - sudo tlmgr pinning add tlcontrib '*'
-  - sudo tlmgr install japanese-otf-nonfree japanese-otf-uptex-nonfree ptex-fontmaps-macos cjk-gs-integrate-macos
+  - source ./install-texlive.sh
+  - tlmgr update --self --all --reinstall-forcibly-removed
   - yarn install
 before_script:
   - sudo fc-cache -fv
-  - sudo cjk-gs-integrate --link-texmf --cleanup --force
-  - sudo cjk-gs-integrate-macos --link-texmf --force
-  - sudo mktexlsr
-  - sudo kanji-config-updmap-sys --jis2004 hiragino-highsierra-pron
-  - sudo kanji-config-updmap-sys status
+  - cjk-gs-integrate --link-texmf --cleanup --force
+  - cjk-gs-integrate-macos --link-texmf --force
+  - mktexlsr
+  - kanji-config-updmap-sys --jis2004 hiragino-highsierra-pron
+  - kanji-config-updmap-sys status
 script:
   - yarn lint
   - latexmk -silent -pdfdvi -norc -e "\$dvipdf='dvipdfmx %O -o %D %S'; \$makeindex='upmendex %O -o %D %S'; \$biber='biber %O --bblencoding=utf8 -u -U --output_safechars %B'; \$bibtex='upbibtex %O %B'; \$latex='uplatex %O -kanji=utf8 -interaction=batchmode -halt-on-error -file-line-error %S';"
