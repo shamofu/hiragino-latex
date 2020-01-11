@@ -6,10 +6,10 @@ env:
   global:
     - HOMEBREW_NO_INSTALL_CLEANUP=TRUE
 before_cache:
-  - find $HOME/texlive -name "*.log" -type f -delete
-  - find $HOME/.texlive -name "*.log" -type f -delete
-  - find $HOME/texlive -name "ls-R" -type f -delete
-  - find $HOME/.texlive -name "ls-R" -type f -delete
+  - sudo find $HOME/texlive -name "*.log" -type f -delete
+  - sudo find $HOME/.texlive -name "*.log" -type f -delete
+  - sudo find $HOME/texlive -name "ls-R" -type f -delete
+  - sudo find $HOME/.texlive -name "ls-R" -type f -delete
 cache:
   directories:
     - $HOME/texlive
