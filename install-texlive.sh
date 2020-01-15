@@ -12,6 +12,8 @@ DIRNAME=tl-`date +%Y_%m_%d_%H_%M_%S`
 
 echo "make the install directory: $DIRNAME"
 mkdir $DIRNAME
+
+(
 cd $DIRNAME
 
 wget http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
@@ -43,8 +45,7 @@ tlmgr pinning add tlcontrib "*"
 tlmgr install japanese-otf-nonfree japanese-otf-uptex-nonfree ptex-fontmaps-macos cjk-gs-integrate-macos
 
 tlmgr option autobackup 0
-
-cd ../..
+)
 
 echo "remove the install directory"
 rm -rf $DIRNAME
