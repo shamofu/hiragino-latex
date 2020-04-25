@@ -1,6 +1,6 @@
 {
   "name": "hiragino-latex",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "hiragino-latex",
   "scripts": {
     "lint": "textlint --format pretty-error document.tex",
